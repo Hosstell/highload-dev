@@ -3,7 +3,10 @@ import flask
 import time
 import threading
 import requests
+from TimeDefiner import TimeDefiner
 
+
+time_definer = TimeDefiner()
 app = Flask(__name__)
 
 VALUE = None
@@ -31,7 +34,9 @@ def updating_data():
         request_time = time.time() - now
         VALUE = response.text
         LAST_REQUEST_TIME = time.time()
-        time.sleep(UPDATE_DATA_TIME - request_time)
+
+        next_request_time = time_definer.get_next_wait_time(request_time)
+        time.sleep(UPDATE_DATA_TIME - next_request_time)
 
 
 if __name__ == "__main__":
